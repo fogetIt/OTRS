@@ -8,6 +8,7 @@ services:
   otrs:
     image: juanluisbaptiste/otrs:latest
     container_name: otrs
+    env_file: .env
     environment:
       # otrs root name: root@localhost
       - OTRS_ROOT_PASSWORD=otrs12315
@@ -27,11 +28,11 @@ services:
       # - OTRS_NUMBER_GENERATOR=Random
       # - OTRS_TICKET_COUNTER
       - SHOW_OTRS_LOGO=yes
-      - SERVER_HOSTNAME=postfix.example.com
-      - SMTP_SERVER=smtp.example.com
-      # - SMTP_PORT=587
-      - SMTP_USERNAME=example@bar.com
-      - SMTP_PASSWORD=postfix12315
+      # - SERVER_HOSTNAME=postfix.example.com
+      # - SMTP_SERVER=smtp.example.com
+      # - SMTP_PORT=25
+      # - SMTP_USERNAME=example@bar.com
+      # - SMTP_PASSWORD=postfix12315
     volumes:
       - ./OtrsConfig.pm:/tmp/Config.pm
       - otrs_backups:/var/otrs/backups
@@ -52,18 +53,5 @@ services:
       - MYSQL_ROOT_PASSWORD=admin12315
     expose:
       - 3306
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-
-  postfix:
-    image: juanluisbaptiste/postfix:latest
-    container_name: postfix
-    environment:
-      - SMTP_SERVER=smtp.example.com
-      - SMTP_USERNAME=example@bar.com
-      - SMTP_PASSWORD=postfix12315
-      - SERVER_HOSTNAME=postfix.example.com
-    expose:
-      - 25
     volumes:
       - /etc/localtime:/etc/localtime:ro
