@@ -88,22 +88,13 @@ sub Load {
     #                                                      #
     # ---------------------------------------------------- #
     # ---------------------------------------------------- #
-
-    # $Self->{'LogModule'} = 'Kernel::System::Log::SysLog';
-    # $Self->{'LogModule::LogFile'} = '/tmp/otrs.log';
-    # $Self->{'DefaultLanguage'} = $ENV{'OTRS_LANGUAGE'};
-    # $Self->{'CheckMXRecord'} = 1;
-    # $Self->{'SendmailModule'} = 'Kernel::System::Email::SMTP';
-    # $Self->{'SendmailModule::Host'} = $ENV{'SMTP_SERVER'};
-    # $Self->{'SendmailModule::Port'} = $ENV{'SMTP_PORT'};
-    # $Self->{'SecureMode'} = 1;
+    return 1;
 }
 
 # ---------------------------------------------------- #
 # needed system stuff (don't edit this)                #
 # ---------------------------------------------------- #
 
-# use base qw(Kernel::Config::Defaults);
 use Kernel::Config::Defaults; # import Translatable()
 use parent qw(Kernel::Config::Defaults);
 

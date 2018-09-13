@@ -1,48 +1,33 @@
 version: '2'
 
-volumes:
-  otrs_backups:
+# volumes:
+#   otrs_backups:
 
 services:
 
   otrs:
-    image: juanluisbaptiste/otrs:latest
     container_name: otrs
-    env_file: .env
-    environment:
-      # otrs root name: root@localhost
-      - OTRS_ROOT_PASSWORD=otrs12315
-      # yes/no/restore
-      - OTRS_INSTALL=no
-      - OTRS_LANGUAGE=zh_CN
-      - OTRS_TIMEZONE=Asia/Shanghai
-      - OTRS_HOSTNAME=otrs-qwert
-      - MYSQL_ROOT_PASSWORD=admin12315
-      - OTRS_DROP_DATABASE=no
-      - OTRS_DB_NAME=otrs
-      - OTRS_DB_HOST=mariadb
-      - OTRS_DB_PORT=3306
-      - OTRS_DB_USER=otrs
-      - OTRS_DB_PASSWORD=mariadb12315
-      # DateChecksum/Date/AutoIncrement/Random
-      # - OTRS_NUMBER_GENERATOR=Random
-      # - OTRS_TICKET_COUNTER
-      - SHOW_OTRS_LOGO=yes
-      # - SERVER_HOSTNAME=postfix.example.com
-      # - SMTP_SERVER=smtp.example.com
-      # - SMTP_PORT=25
-      # - SMTP_USERNAME=example@bar.com
-      # - SMTP_PASSWORD=postfix12315
+    image: otrs:${OTRS_VERSION}
+    # env_file: .env
+    # environment:
+    #   - OTRS_DB_HOST=mariadb
+    #   - OTRS_DB_NAME=otrs
+    #   - OTRS_DB_USER=otrs
+    #   - OTRS_DB_PASSWORD=mariadb12315
+    #   - MYSQL_ROOT_PASSWORD=admin12315
+    #   - OTRS_DB_PORT=3306
+    #   - OTRS_ROOT_PASSWORD=otrs12315
+    #   # yes/no/restore
+    #   - OTRS_INSTALL=yes
+    #   - OTRS_DROP_DATABASE=no
+    #   - OTRS_HOSTNAME=otrs-qwert
+    #   # otrs root name: root@localhost
+    #   - OTRS_LANGUAGE=zh_CN
+    #   - OTRS_TIMEZONE=Asia/Shanghai
+    #   - SHOW_OTRS_LOGO=yes
     volumes:
-      - ./OtrsConfig.pm:/tmp/Config.pm
-      - otrs_backups:/var/otrs/backups
+      # - otrs_backups:/var/otrs/backups
       - /etc/localtime:/etc/localtime:ro
-    command:
-      - /bin/bash
-      - -c
-      - |
-        cp -f /tmp/Config.pm /Kernel/Config.pm
-        /run.sh
     ports:
       - 8080:80
 

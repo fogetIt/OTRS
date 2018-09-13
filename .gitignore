@@ -1,7 +1,5 @@
 .vagrant/
 .idea/
-workspace/*
-!workspace/bin.sh
-!workspace/docker-compose.yml
-!workspace/OtrsConfig.pm
+workspace/.env
+workspace/build/otrs
 *.log
