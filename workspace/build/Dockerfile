@@ -13,6 +13,7 @@ RUN apt-get -y install \
 RUN apt-get -y install \
         $(perl /opt/otrs/bin/otrs.CheckModules.pl | grep 'Not installed!' | grep 'Use:' | awk '{print $8}' | cut -d "'" -f 1) && \
     perl /opt/otrs/bin/otrs.CheckModules.pl
-RUN apt-get install -y cron mariadb-client apache2 libapache2-mod-perl2 supervisor python-pip && \
-    pip install supervisor-stdout
+RUN apt-get install -y cron mariadb-client apache2 libapache2-mod-perl2 supervisor
+# python-pip&& \
+#     pip install supervisor-stdout
 EXPOSE 80

@@ -1,5 +1,9 @@
 #!/bin/bash
 set -e
+info_log ()
+{
+    echo -e "\033[32m=====> INFO: ${1}\033[0m"
+}
 info_log "Starting apache2..."
 useradd -d /opt/otrs -c 'OTRS user' ${OTRS_USER}
 usermod -G www-data ${OTRS_USER}
