@@ -2,6 +2,10 @@
 set -e
 export OTRS_USER=otrs
 export OTRS_VERSION=5.0.16
+# export OTRS_VERSION=5.0.22
+# export OTRS_VERSION=6.0.5
+# export OTRS_VERSION=6.0.9
+# export OTRS_VERSION=6.0.10
 docker-compose down
 pushd build
     if [[ ! -d "otrs${OTRS_VERSION}" ]]; then
