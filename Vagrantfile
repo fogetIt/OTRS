@@ -53,10 +53,7 @@ Vagrant.configure("2") do |config|
   #
   config.vm.provider "virtualbox" do |vb|
     vb.name = "OTRS"
-  #   # Display the VirtualBox GUI when booting the machine
     vb.gui = false
-  #
-  #   # Customize the amount of memory on the VM:
     vb.memory = "2048"
     vb.cpus = 2
   end
@@ -69,8 +66,6 @@ Vagrant.configure("2") do |config|
   # documentation for more information about their specific syntax and use.
   # config.vm.provision "shell", path: "bootstrap/prereqs.sh"
   config.vm.provision "shell", inline: <<-SHELL
-  #   apt-get update
-  #   apt-get install -y apache2
     cd /home/vagrant/bootstrap && /bin/bash prereqs.sh vagrant
   SHELL
 end

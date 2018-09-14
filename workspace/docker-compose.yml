@@ -27,6 +27,7 @@ services:
       # - otrs_backups:/var/otrs/backups
       - /etc/localtime:/etc/localtime:ro
       - ./build/run.sh:/run.sh
+    command: /bin/bash /run.sh
     ports:
       - 8080:80
 

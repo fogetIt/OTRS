@@ -20,7 +20,11 @@ RUN useradd -d /opt/otrs -c 'OTRS user' ${OTRS_USER} && \
     usermod -G www-data ${OTRS_GROUP} && \
     /opt/otrs/bin/otrs.SetPermissions.pl /opt/otrs --otrs-user=${OTRS_USER} --web-group=${OTRS_GROUP}
 # RUN apt-get install -y supervisor python-pip && pip install supervisor-stdout
-RUN apt-get install -y apache2 libapache2-mod-perl2 mariadb-client && \
+RUN apt-get install -y \
+        apache2 \
+        libapache2-mod-perl2 \
+        mariadb-client \
+        cron && \
     ln -s /opt/otrs/scripts/apache2-httpd.include.conf /etc/apache2/sites-enabled/otrs.conf && \
     a2enmod perl && a2enmod filter && a2enmod deflate && a2enmod headers
 EXPOSE 80
