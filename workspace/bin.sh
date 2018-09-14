@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+export OTRS_USER=otrs
 export OTRS_VERSION=5.0.16
 docker-compose down
 pushd build

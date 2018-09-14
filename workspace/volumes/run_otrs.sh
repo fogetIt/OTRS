@@ -14,9 +14,9 @@ if [[ ${OTRS_DB_INIT} == 'true' ]]; then
     ${MYSQLCMD} -e "CREATE USER '${OTRS_DB_USER}'@'%' IDENTIFIED BY '${OTRS_DB_PASSWORD}';"
     ${MYSQLCMD} -e "GRANT ALL PRIVILEGES ON ${OTRS_DB_NAME}.* TO '${OTRS_DB_USER}'@'%' IDENTIFIED BY '${OTRS_DB_PASSWORD}';"
     ${MYSQLCMD} -e 'FLUSH PRIVILEGES;'
-    ${MYSQLCMD} otrs < /opt/otrs/scripts/database/otrs-schema.mysql.sql
-    ${MYSQLCMD} otrs < /opt/otrs/scripts/database/otrs-initial_insert.mysql.sql
-    ${MYSQLCMD} otrs < /opt/otrs/scripts/database/otrs-schema-post.mysql.sql
+    ${MYSQLCMD} ${OTRS_DB_NAME} < /opt/otrs/scripts/database/otrs-schema.mysql.sql
+    ${MYSQLCMD} ${OTRS_DB_NAME} < /opt/otrs/scripts/database/otrs-initial_insert.mysql.sql
+    ${MYSQLCMD} ${OTRS_DB_NAME} < /opt/otrs/scripts/database/otrs-schema-post.mysql.sql
 fi
 info_log "Checking OTRS..."
 perl -cw /opt/otrs/bin/otrs.Console.pl
