@@ -17,24 +17,25 @@ if [[ ${OTRS_DB_INIT} == 'true' ]]; then
     ${MYSQLCMD} otrs < /opt/otrs/scripts/database/otrs-initial_insert.mysql.sql
     ${MYSQLCMD} otrs < /opt/otrs/scripts/database/otrs-schema-post.mysql.sql
 fi
-set -x
 info_log "Checking OTRS..."
     perl -cw /opt/otrs/bin/otrs.Console.pl
     perl -cw /opt/otrs/bin/cgi-bin/index.pl
     perl -cw /opt/otrs/bin/cgi-bin/customer.pl
 info_log "Starting apache2..."
     useradd -d /opt/otrs -c 'OTRS user' ${OTRS_USER}
-    usermod -G www-data ${OTRS_GROUP}
+    usermod -G www-data ${OTRS_USER}
     /opt/otrs/bin/otrs.SetPermissions.pl /opt/otrs --otrs-user=${OTRS_USER} --web-group=www-data
+    # ln -s /opt/otrs/scripts/apache2-httpd.include.conf /etc/apache2/sites-enabled/otrs.conf
+    ln -s /opt/otrs/scripts/apache2-httpd.include.conf /etc/apache2/sites-available/otrs.conf
+    service apache2 restart
     a2ensite otrs
     a2enmod perl
     a2enmod filter
     a2enmod deflate
     a2enmod headers
-    ln -s /opt/otrs/scripts/apache2-httpd.include.conf /etc/apache2/sites-enabled/otrs.conf
-    /etc/init.d/apache2 restart
-    apachectl -M | sort
-service cron restart
+    apachectl -M | sort | grep version
+info_log "Starting crontab..."
+    service cron restart
 # supervisord&
 pushd /opt/otrs
     info_log "Starting OTRS daemon..."

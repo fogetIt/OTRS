@@ -14,7 +14,6 @@ services:
     image: otrs:${OTRS_VERSION}
     environment:
       - OTRS_USER=otrs
-      - OTRS_GROUP=otrs
       - MYSQL_ROOT_PASSWORD=mariadb12315
       - OTRS_DB_HOST=mariadb
       - OTRS_DB_PORT=3306
