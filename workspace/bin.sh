@@ -2,7 +2,7 @@
 set -e
 export OTRS_USER=otrs
 export OTRS_GROUP=otrs
-export OTRS_VERSION=6.0.9
+export OTRS_VERSION=6.0.10
 if [[ -z $(docker images otrs:${OTRS_VERSION} -q) ]]; then
     docker-compose build
 fi

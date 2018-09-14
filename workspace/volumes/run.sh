@@ -13,9 +13,12 @@ if [[ ${OTRS_DB_INIT} == 'true' ]]; then
     ${MYSQLCMD} otrs < /opt/otrs/scripts/database/otrs-initial_insert.mysql.sql
     ${MYSQLCMD} otrs < /opt/otrs/scripts/database/otrs-schema-post.mysql.sql
 fi
+set -x
+a2ensite otrs
 /etc/init.d/apache2 start
 service cron start
 apachectl -M | sort
+/opt/otrs/bin/otrs.SetPermissions.pl /opt/otrs --otrs-user=${OTRS_USER} --web-group=${OTRS_GROUP}
 # supervisord&
 pushd /opt/otrs
     echo "Starting OTRS daemon..."
@@ -23,6 +26,7 @@ pushd /opt/otrs
     # su -c 'bin/Cron.sh start' -s /bin/bash ${OTRS_USER}
     echo "OTRS Ready !"
 popd
+
 
 trap 'kill ${!}; term_handler' SIGTERM
 while true

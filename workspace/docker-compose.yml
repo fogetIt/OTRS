@@ -12,6 +12,7 @@ services:
       args:
         OTRS_USER: ${OTRS_USER}
         OTRS_GROUP: ${OTRS_GROUP}
+        OTRS_VERSION: ${OTRS_VERSION}
     image: otrs:${OTRS_VERSION}
     environment:
       - OTRS_USER=${OTRS_USER}
@@ -26,7 +27,9 @@ services:
     volumes:
       # - otrs_backups:/var/otrs/backups
       - /etc/localtime:/etc/localtime:ro
-      - ./build/run.sh:/run.sh
+      - ./volumes/run.sh:/run.sh
+      - ./volumes/Config.pm:/opt/otrs/Kernel/Config.pm
+      - ./volumes/apache2-perl-startup.pl:/opt/otrs/scripts/apache2-perl-startup.pl
     command: /bin/bash /run.sh
     ports:
       - 8080:80
