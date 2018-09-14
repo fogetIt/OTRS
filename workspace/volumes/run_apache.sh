@@ -7,7 +7,7 @@ info_log ()
 info_log "Starting apache2..."
 /opt/otrs/bin/otrs.SetPermissions.pl /opt/otrs --otrs-user=${OTRS_USER} --web-group=www-data
 # ln -s /opt/otrs/scripts/apache2-httpd.include.conf /etc/apache2/sites-enabled/otrs.conf
-ln -s /opt/otrs/scripts/apache2-httpd.include.conf /etc/apache2/sites-available/otrs.conf
+ln -sf /opt/otrs/scripts/apache2-httpd.include.conf /etc/apache2/sites-available/otrs.conf
 a2ensite otrs
 a2enmod perl
 a2enmod filter
