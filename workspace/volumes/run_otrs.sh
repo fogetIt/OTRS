@@ -11,6 +11,7 @@ do
 done
 if [[ ${OTRS_DB_INIT} == 'true' ]]; then
     ${MYSQLCMD} -e "CREATE DATABASE ${OTRS_DB_NAME} CHARACTER SET utf8;"
+    ${MYSQLCMD} -e "CREATE USER '${OTRS_DB_USER}'@'%' IDENTIFIED BY '${OTRS_DB_PASSWORD}';"
     ${MYSQLCMD} -e "GRANT ALL PRIVILEGES ON ${OTRS_DB_NAME}.* TO '${OTRS_DB_USER}'@'%' IDENTIFIED BY '${OTRS_DB_PASSWORD}';"
     ${MYSQLCMD} -e 'FLUSH PRIVILEGES;'
     ${MYSQLCMD} otrs < /opt/otrs/scripts/database/otrs-schema.mysql.sql
@@ -18,24 +19,9 @@ if [[ ${OTRS_DB_INIT} == 'true' ]]; then
     ${MYSQLCMD} otrs < /opt/otrs/scripts/database/otrs-schema-post.mysql.sql
 fi
 info_log "Checking OTRS..."
-    perl -cw /opt/otrs/bin/otrs.Console.pl
-    perl -cw /opt/otrs/bin/cgi-bin/index.pl
-    perl -cw /opt/otrs/bin/cgi-bin/customer.pl
-info_log "Starting apache2..."
-    useradd -d /opt/otrs -c 'OTRS user' ${OTRS_USER}
-    usermod -G www-data ${OTRS_USER}
-    /opt/otrs/bin/otrs.SetPermissions.pl /opt/otrs --otrs-user=${OTRS_USER} --web-group=www-data
-    # ln -s /opt/otrs/scripts/apache2-httpd.include.conf /etc/apache2/sites-enabled/otrs.conf
-    ln -s /opt/otrs/scripts/apache2-httpd.include.conf /etc/apache2/sites-available/otrs.conf
-    service apache2 restart
-    a2ensite otrs
-    a2enmod perl
-    a2enmod filter
-    a2enmod deflate
-    a2enmod headers
-    apachectl -M | sort | grep version
-info_log "Starting crontab..."
-    service cron restart
+perl -cw /opt/otrs/bin/otrs.Console.pl
+perl -cw /opt/otrs/bin/cgi-bin/index.pl
+perl -cw /opt/otrs/bin/cgi-bin/customer.pl
 # supervisord&
 pushd /opt/otrs
     info_log "Starting OTRS daemon..."
@@ -43,7 +29,6 @@ pushd /opt/otrs
     # su -c 'bin/Cron.sh start' -s /bin/bash ${OTRS_USER}
 popd
 info_log "OTRS Ready !"
-
 trap 'kill ${!}; term_handler' SIGTERM
 while true
 do

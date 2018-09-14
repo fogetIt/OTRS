@@ -18,18 +18,21 @@ services:
       - OTRS_DB_HOST=mariadb
       - OTRS_DB_PORT=3306
       - OTRS_DB_INIT=true
-      - OTRS_DB_NAME=otrs
+      - OTRS_DB_NAME=otrs_db
       - OTRS_DB_USER=otrs
       - OTRS_DB_PASSWORD=otrs12315
     volumes:
       # - otrs_backups:/var/otrs/backups
       - /etc/localtime:/etc/localtime:ro
-      - ./volumes/run.sh:/run.sh
+      - ./volumes/run_otrs.sh:/run_otrs.sh
+      - ./volumes/run_apache.sh:/run_apache.sh
+      - ./volumes/supervisord.conf:/supervisord.conf
       - ./volumes/Config.pm:/opt/otrs/Kernel/Config.pm
       - ./volumes/apache2-perl-startup.pl:/opt/otrs/scripts/apache2-perl-startup.pl
-    command: /bin/bash /run.sh
+    command: /usr/bin/supervisord -c /supervisord.conf
     ports:
       - 8080:80
+      - 9001:9001
 
   mariadb:
     image: juanluisbaptiste/otrs-mariadb:latest
