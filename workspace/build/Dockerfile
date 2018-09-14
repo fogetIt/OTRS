@@ -15,4 +15,4 @@ RUN apt-get -y install \
 RUN apt-get install -y cron mariadb-client apache2 libapache2-mod-perl2 supervisor
 RUN useradd -d /opt/otrs -c 'OTRS user' ${OTRS_USER} && \
     usermod -G www-data ${OTRS_USER}
-EXPOSE 80
+EXPOSE 8080
