@@ -10,13 +10,11 @@ services:
     build:
       context: build
       args:
-        OTRS_USER: ${OTRS_USER}
-        OTRS_GROUP: ${OTRS_GROUP}
         OTRS_VERSION: ${OTRS_VERSION}
     image: otrs:${OTRS_VERSION}
     environment:
-      - OTRS_USER=${OTRS_USER}
-      - OTRS_GROUP=${OTRS_GROUP}
+      - OTRS_USER=otrs
+      - OTRS_GROUP=otrs
       - MYSQL_ROOT_PASSWORD=mariadb12315
       - OTRS_DB_HOST=mariadb
       - OTRS_DB_PORT=3306

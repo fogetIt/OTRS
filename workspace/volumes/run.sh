@@ -1,5 +1,9 @@
 #!/bin/bash
 set -e
+info_log ()
+{
+    echo -e "\033[32m=====> INFO: ${1}\033[0m"
+}
 MYSQLCMD="mysql -h ${OTRS_DB_HOST} -P ${OTRS_DB_PORT} -u root -p${MYSQL_ROOT_PASSWORD} "
 while ! ${MYSQLCMD} -e "SHOW DATABASES;"
 do
@@ -14,19 +18,30 @@ if [[ ${OTRS_DB_INIT} == 'true' ]]; then
     ${MYSQLCMD} otrs < /opt/otrs/scripts/database/otrs-schema-post.mysql.sql
 fi
 set -x
-a2ensite otrs
-/etc/init.d/apache2 start
-service cron start
-apachectl -M | sort
-/opt/otrs/bin/otrs.SetPermissions.pl /opt/otrs --otrs-user=${OTRS_USER} --web-group=${OTRS_GROUP}
+info_log "Checking OTRS..."
+    perl -cw /opt/otrs/bin/otrs.Console.pl
+    perl -cw /opt/otrs/bin/cgi-bin/index.pl
+    perl -cw /opt/otrs/bin/cgi-bin/customer.pl
+info_log "Starting apache2..."
+    useradd -d /opt/otrs -c 'OTRS user' ${OTRS_USER}
+    usermod -G www-data ${OTRS_GROUP}
+    /opt/otrs/bin/otrs.SetPermissions.pl /opt/otrs --otrs-user=${OTRS_USER} --web-group=www-data
+    a2ensite otrs
+    a2enmod perl
+    a2enmod filter
+    a2enmod deflate
+    a2enmod headers
+    ln -s /opt/otrs/scripts/apache2-httpd.include.conf /etc/apache2/sites-enabled/otrs.conf
+    /etc/init.d/apache2 restart
+    apachectl -M | sort
+service cron restart
 # supervisord&
 pushd /opt/otrs
-    echo "Starting OTRS daemon..."
+    info_log "Starting OTRS daemon..."
     su -c 'bin/otrs.Daemon.pl start' -s /bin/bash ${OTRS_USER}
     # su -c 'bin/Cron.sh start' -s /bin/bash ${OTRS_USER}
-    echo "OTRS Ready !"
 popd
-
+info_log "OTRS Ready !"
 
 trap 'kill ${!}; term_handler' SIGTERM
 while true
