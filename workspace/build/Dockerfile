@@ -1,46 +1,26 @@
 FROM ubuntu:16.04
 ARG OTRS_USER=otrs
 ARG OTRS_GROUP=otrs
-ARG OTRS_VERSION=6.0.10
 RUN apt-get update && mkdir /opt/otrs
 COPY otrs /opt/otrs
-RUN apt-get install -y \
-        libapache2-mod-perl2 \
-        libdbd-mysql-perl \
-        libtimedate-perl \
-        libnet-dns-perl \
-        libnet-ldap-perl \
-        libio-socket-ssl-perl \
-        libpdf-api2-perl \
-        libdbd-mysql-perl \
-        libsoap-lite-perl \
-        libtext-csv-xs-perl \
-        libjson-xs-perl \
+RUN apt-get -y install \
+        libfindbin-libs-perl \
         libapache-dbi-perl \
-        libxml-libxml-perl \
-        libxml-libxslt-perl \
-        libyaml-perl \
-        libarchive-zip-perl \
-        libcrypt-eksblowfish-perl \
-        libencode-hanextra-perl \
-        libmail-imapclient-perl \
-        libtemplate-perl && \
-    cp /opt/otrs/Kernel/Config.pm.dist /opt/otrs/Kernel/Config.pm && \
+        liblwp-useragent-chicaching-perl \
+        liblwp-useragent-determined-perl \
+        liblwp-useragent-progressbar-perl
+RUN apt-get -y install \
+        $(perl /opt/otrs/bin/otrs.CheckModules.pl | grep 'Not installed!' | grep 'Use:' | awk '{print $8}' | cut -d "'" -f 1) && \
+    perl /opt/otrs/bin/otrs.CheckModules.pl
+COPY Config.pm /opt/otrs/Kernel/Config.pm
+RUN perl -cw /opt/otrs/bin/otrs.Console.pl && \
     perl -cw /opt/otrs/bin/cgi-bin/index.pl && \
-    perl -cw /opt/otrs/bin/cgi-bin/customer.pl && \
-    perl -cw /opt/otrs/bin/otrs.Console.pl
-# RUN apt-get install -y python-pip && \
-#     pip install supervisor-stdout
-RUN apt-get install -y apache2 libapache2-mod-perl2 && \
-    ln -s /opt/otrs/scripts/apache2-httpd.include.conf /etc/apache2/sites-enabled/otrs.conf && \
-    a2enmod perl && \
-    a2enmod filter && \
-    a2enmod version && \
-    a2enmod deflate && \
-    a2enmod headers
+    perl -cw /opt/otrs/bin/cgi-bin/customer.pl
 RUN useradd -d /opt/otrs -c 'OTRS user' ${OTRS_USER} && \
     usermod -G www-data ${OTRS_GROUP} && \
-    perl /opt/otrs/bin/otrs.SetPermissions.pl && \
-    perl /opt/otrs/bin/otrs.CheckModules.pl
-EXPOSE 80/tcp
-CMD '/opt/otrs/bin/otrs.Daemon.pl start'
+    /opt/otrs/bin/otrs.SetPermissions.pl /opt/otrs --otrs-user=${OTRS_USER} --web-group=${OTRS_GROUP}
+# RUN apt-get install -y supervisor python-pip && pip install supervisor-stdout
+RUN apt-get install -y apache2 libapache2-mod-perl2 mariadb-client && \
+    ln -s /opt/otrs/scripts/apache2-httpd.include.conf /etc/apache2/sites-enabled/otrs.conf && \
+    a2enmod perl && a2enmod filter && a2enmod deflate && a2enmod headers
+EXPOSE 80
