@@ -28,7 +28,7 @@ services:
       - ./volumes/run_otrs.sh:/run_otrs.sh
       - ./volumes/run_apache.sh:/run_apache.sh
       - ./volumes/supervisord.conf:/supervisord.conf
-      - ./volumes/otrs_host.conf:/etc/apache2/sites-available/otrs_host.conf
+      - ./volumes/000-default.conf:/etc/apache2/sites-available/000-default.conf
       - ./volumes/Config.pm:/opt/otrs/Kernel/Config.pm
       - ./volumes/apache2-perl-startup.pl:/opt/otrs/scripts/apache2-perl-startup.pl
     command: /usr/bin/supervisord -c /supervisord.conf
