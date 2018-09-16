@@ -9,20 +9,20 @@ while ! ${MYSQLCMD} -e "SHOW DATABASES;"
 do
     sleep 5
 done
+if [[ ${OTRS_DB_CONTAINER} != 'true' ]]; then
+    sed -i s/{{MYSQL_USER}}/${MYSQL_USER}/g init-db.sql
+    sed -i s/{{MYSQL_PASSWORD}}/${MYSQL_PASSWORD}/g init-db.sql
+    sed -i s/{{MYSQL_DATABASE}}/${MYSQL_DATABASE}/g init-db.sql
+    ${MYSQLCMD} ${MYSQL_DATABASE} < init-db.sql
+fi
 if [[ ${OTRS_DB_INIT} == 'true' ]]; then
-    if [[ ${OTRS_DB_CONTAINER} != 'true' ]]; then
-        sed -i s/{{MYSQL_USER}}/${MYSQL_USER}/g init-db.sql
-        sed -i s/{{MYSQL_PASSWORD}}/${MYSQL_PASSWORD}/g init-db.sql
-        sed -i s/{{MYSQL_DATABASE}}/${MYSQL_DATABASE}/g init-db.sql
-        ${MYSQLCMD} ${MYSQL_DATABASE} < init-db.sql
-    fi
     ${MYSQLCMD} ${MYSQL_DATABASE} < /opt/otrs/scripts/database/otrs-schema.mysql.sql
     ${MYSQLCMD} ${MYSQL_DATABASE} < /opt/otrs/scripts/database/otrs-initial_insert.mysql.sql
     ${MYSQLCMD} ${MYSQL_DATABASE} < /opt/otrs/scripts/database/otrs-schema-post.mysql.sql
 fi
 info_log "Configure OTRS..."
 (
-    cp /opt/otrs/Kernel/Config.pm.dist /opt/otrs/Kernel/Config.pm
+    cp -p /opt/otrs/Kernel/Config.pm.dist /opt/otrs/Kernel/Config.pm
     # sed -n '/\($Self->{DatabaseHost} = \).\+;$/p' /opt/otrs/Kernel/Config.pm.dist
     sed -i 's/\($Self->{Database} = \).\+;$/\1$ENV{'MYSQL_DATABASE'};/g' /opt/otrs/Kernel/Config.pm
     sed -i 's/\($Self->{DatabasePw} = \).\+;$/\1$ENV{'MYSQL_PASSWORD'};/g' /opt/otrs/Kernel/Config.pm

@@ -18,8 +18,8 @@ services:
       - OTRS_USER=${OTRS_USER}
       - OTRS_DB_HOST=mariadb
       - OTRS_DB_PORT=3306
-      - OTRS_DB_INIT=true
       - OTRS_DB_CONTAINER=true
+      - OTRS_DB_INIT=false
     volumes:
       # - otrs_backups:/var/otrs/backups
       - /etc/localtime:/etc/localtime:ro
