@@ -1,11 +1,8 @@
 #!/bin/bash
 set -e
 export OTRS_USER=otrs
-export OTRS_VERSION=5.0.16
-# export OTRS_VERSION=5.0.22
-# export OTRS_VERSION=6.0.5
-# export OTRS_VERSION=6.0.9
-# export OTRS_VERSION=6.0.10
+# 5.0.16/5.0.22/6.0.5/6.0.9/6.0.10
+export OTRS_VERSION=${1}
 docker-compose down
 pushd build
     if [[ ! -d "otrs${OTRS_VERSION}" ]]; then

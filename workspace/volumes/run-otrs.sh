@@ -4,6 +4,8 @@ info_log ()
 {
     echo -e "\033[32m=====> INFO: ${1}\033[0m"
 }
+# 指定 -h ，使用 tcp/ip 连接
+# 不指定 -h ，使用 socket(/var/run/mysqld/mysqld.sock) 连接
 MYSQLCMD="mysql -h ${OTRS_DB_HOST} -P ${OTRS_DB_PORT} -u root -p${MYSQL_ROOT_PASSWORD} "
 while ! ${MYSQLCMD} -e "SHOW DATABASES;"
 do
@@ -37,7 +39,6 @@ info_log "Checking OTRS..."
     perl -cw /opt/otrs/bin/cgi-bin/index.pl
     perl -cw /opt/otrs/bin/cgi-bin/customer.pl
 )
-# supervisord&
 pushd /opt/otrs
     info_log "Starting OTRS daemon..."
     su -c 'bin/otrs.Daemon.pl start' -s /bin/bash ${OTRS_USER}
