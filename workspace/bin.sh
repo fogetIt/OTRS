@@ -16,9 +16,12 @@ popd
 if [[ -z $(docker images otrs:${OTRS_VERSION} -q) ]]; then
     docker-compose build
 fi
+if [[ -z $(docker images mariadb:latest -q) ]]; then
+    docker pull mariadb:10.3.9
+    docker tag mariadb:10.3.9 mariadb:latest
+fi
 docker-compose rm -f -v
 echo 'y' | docker volume prune
-docker pull juanluisbaptiste/otrs-mariadb:latest
 docker-compose up -d
 docker logs otrs --follow
 # otrs/installer.pl

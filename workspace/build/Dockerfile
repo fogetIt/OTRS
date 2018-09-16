@@ -12,7 +12,7 @@ RUN apt-get -y install \
 RUN apt-get -y install \
         $(perl /opt/otrs/bin/otrs.CheckModules.pl | grep 'Not installed!' | grep 'Use:' | awk '{print $8}' | cut -d "'" -f 1) && \
     perl /opt/otrs/bin/otrs.CheckModules.pl
-RUN apt-get install -y cron mariadb-client apache2 libapache2-mod-perl2 supervisor
+RUN apt-get install -y cron mariadb-client apache2=2.4.18-2ubuntu3.9 libapache2-mod-perl2 supervisor
 RUN useradd -d /opt/otrs -c 'OTRS user' ${OTRS_USER} && \
     usermod -G www-data ${OTRS_USER}
 EXPOSE 8080

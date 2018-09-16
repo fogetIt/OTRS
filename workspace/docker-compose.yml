@@ -13,37 +13,35 @@ services:
         OTRS_USER: ${OTRS_USER}
         OTRS_VERSION: ${OTRS_VERSION}
     image: otrs:${OTRS_VERSION}
+    env_file: .env
     environment:
       - OTRS_USER=${OTRS_USER}
-      - MYSQL_ROOT_PASSWORD=mariadb12315
       - OTRS_DB_HOST=mariadb
       - OTRS_DB_PORT=3306
       - OTRS_DB_INIT=true
-      - OTRS_DB_NAME=otrs_db
-      - OTRS_DB_USER=otrs
-      - OTRS_DB_PASSWORD=otrs12315
+      - OTRS_DB_CONTAINER=true
     volumes:
       # - otrs_backups:/var/otrs/backups
       - /etc/localtime:/etc/localtime:ro
-      - ./volumes/run_otrs.sh:/run_otrs.sh
-      - ./volumes/run_apache.sh:/run_apache.sh
       - ./volumes/supervisord.conf:/supervisord.conf
-      - ./volumes/000-default.conf:/etc/apache2/sites-available/000-default.conf
-      - ./volumes/Config.pm:/opt/otrs/Kernel/Config.pm
-      - ./volumes/apache2-perl-startup.pl:/opt/otrs/scripts/apache2-perl-startup.pl
+      - ./volumes/init-db.sql:/init-db.sql
+      - ./volumes/run-otrs.sh:/run-otrs.sh
+      - ./volumes/run-apache.sh:/run-apache.sh
+      - ./volumes/apache2/ports.conf:/etc/apache2/ports.conf
+      - ./volumes/apache2/sites-available/000-default.conf:/etc/apache2/sites-available/000-default.conf
     command: /usr/bin/supervisord -c /supervisord.conf
     ports:
       - 8080:8080
       - 9001:9001
 
   mariadb:
-    image: juanluisbaptiste/otrs-mariadb:latest
+    image: mariadb:latest
     container_name: mariadb
-    environment:
-      - MYSQL_ROOT_PASSWORD=mariadb12315
     expose:
       - 3306
     ports:
       - 3306:3306
+    env_file: .env
     volumes:
       - /etc/localtime:/etc/localtime:ro
+      - ./volumes/mariadb/my.conf:/etc/mysql/my.cnf
