@@ -18,18 +18,16 @@ services:
       - OTRS_USER=${OTRS_USER}
       - OTRS_DB_HOST=mariadb
       - OTRS_DB_PORT=3306
-      - OTRS_DB_CONTAINER=true
       - OTRS_DB_INIT=false
     volumes:
       # - otrs_backups:/var/otrs/backups
       - /etc/localtime:/etc/localtime:ro
-      - ./volumes/supervisord.conf:/supervisord.conf
-      - ./volumes/init-db.sql:/init-db.sql
-      - ./volumes/run-otrs.sh:/run-otrs.sh
-      - ./volumes/run-apache.sh:/run-apache.sh
-      # - ./volumes/mariadb/my.client.conf:/etc/mysql/my.cnf
-      - ./volumes/apache2/ports.conf:/etc/apache2/ports.conf
-      - ./volumes/apache2/sites-available/000-default.conf:/etc/apache2/sites-available/000-default.conf
+      - ./volumes/otrs${NUM}/supervisord.conf:/supervisord.conf
+      - ./volumes/otrs${NUM}/init-db.sql:/init-db.sql
+      - ./volumes/otrs${NUM}/run-otrs.sh:/run-otrs.sh
+      - ./volumes/otrs${NUM}/run-apache.sh:/run-apache.sh
+      - ./volumes/otrs${NUM}/apache2/ports.conf:/etc/apache2/ports.conf
+      - ./volumes/otrs${NUM}/apache2/sites-available/000-default.conf:/etc/apache2/sites-available/000-default.conf
     command: /usr/bin/supervisord -c /supervisord.conf
     ports:
       - 8080:8080
@@ -45,4 +43,4 @@ services:
     env_file: .env
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./volumes/mariadb/my.server.conf:/etc/mysql/my.cnf
+      - ./volumes/mariadb/my.conf:/etc/mysql/my.cnf

@@ -2,7 +2,7 @@ FROM ubuntu:16.04
 ARG OTRS_USER=otrs
 ARG OTRS_VERSION=6.0.10
 RUN apt-get update && mkdir /opt/otrs
-COPY "otrs${OTRS_VERSION}" /opt/otrs
+COPY "otrs-${OTRS_VERSION}" /opt/otrs
 RUN apt-get -y install \
         libfindbin-libs-perl \
         libapache-dbi-perl \
