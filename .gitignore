@@ -1,5 +1,4 @@
 .vagrant/
 .idea/
-workspace/.env
 workspace/build/otrs*
 *.log

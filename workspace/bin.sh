@@ -20,5 +20,5 @@ fi
 docker-compose rm -f -v
 echo 'y' | docker volume prune
 docker-compose up -d
-docker logs otrs --follow
+# docker logs otrs --follow
 # otrs/installer.pl
