@@ -1,8 +1,5 @@
 version: '2'
 
-# volumes:
-#   otrs_backups:
-
 services:
 
   otrs:
@@ -36,10 +33,6 @@ services:
   mariadb:
     image: mariadb:latest
     container_name: mariadb
-    expose:
-      - 3306
-    ports:
-      - 3306:3306
     env_file: .env
     volumes:
       - /etc/localtime:/etc/localtime:ro
